@@ -1,0 +1,26 @@
+version: '3'
+services:
+  db:
+    image: postgres:14.22-trixie
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - notes_db_data:/var/lib/postgresql/data #simpan vol global
+    environment:
+      - POSTGRES_USER=${PGUSER}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+      - POSTGRES_DB=${PGDATABASE}
+    ports:
+      - "${PGPORT}:${PGPORT}"
+    env_file: .env
+  app:
+    build: .
+    env_file: .env
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    environment:
+      - DB_HOST=db  #auto read dari env file buat config
+    depends_on:
+      - db
+
+volumes: 
+  notes_db_data: 
