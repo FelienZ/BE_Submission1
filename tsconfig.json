@@ -11,6 +11,7 @@
     "target": "es2022",
     "moduleResolution": "nodenext", //sinkronisasi js ts impor
     "types": [],
+    
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
@@ -48,5 +49,8 @@
     "forceConsistentCasingInFileNames": true,
   },
   "include": ["src/**/*"], //def workdir src
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules/*", "dist/*"],
+  "ts-node": {
+    "esm": true
+  }
 }

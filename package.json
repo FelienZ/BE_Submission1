@@ -6,10 +6,15 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.ts"
+    "build": "npx tsc",
+    "dev": "nodemon src/index.ts",
+    "start": "node dist/index.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix ",
+    "migrate": "node-pg-migrate -e .env"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["Submission", "Backend", "Rajab", "FelienZ"],
+  "author": "FelienZ",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^17.3.1",
@@ -18,11 +23,14 @@
     "pg": "^8.20.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/express": "^5.0.6",
     "@types/node": "^25.5.0",
     "@types/pg": "^8.20.0",
+    "eslint": "^10.1.0",
     "nodemon": "^3.1.14",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.1"
   }
 }
