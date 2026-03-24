@@ -1,6 +1,7 @@
 import type { Pool } from 'pg';
 import type { NoteRepository } from '../models/interfaces/repository.js';
 import type { Note } from '../models/types/note.js';
+import NoteMapper from './utils/NoteMapper.js';
 
 export class NoteRepo implements NoteRepository {
   dbClient: Pool;
@@ -29,7 +30,7 @@ export class NoteRepo implements NoteRepository {
     try {
       const query = 'SELECT * FROM notes';
       const result = await this.dbClient.query(query);
-      return result.rows;
+      return result.rows.map(r => NoteMapper(r));
     } catch (error) {
       throw new Error('Failed to get notes', {cause: error});
     }
@@ -39,7 +40,7 @@ export class NoteRepo implements NoteRepository {
       const query = 'SELECT * FROM notes WHERE owner_id = $1';
       const values = [userId];
       const result = await this.dbClient.query(query, values);
-      return result.rows;
+      return result.rows.map(r=> NoteMapper(r));
     } catch (error) {
       throw new Error('Failed to get notes by user ID', {cause: error});
     }
@@ -52,7 +53,7 @@ export class NoteRepo implements NoteRepository {
       if (result.rows.length === 0) {
         return null; // nanti service cek
       }
-      return result.rows[0];
+      return NoteMapper(result.rows[0]);
     } catch (error) {
       throw new Error('Failed to get note by ID', {cause: error});
     }
