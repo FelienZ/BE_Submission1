@@ -3,8 +3,8 @@ type User = {
     name: string,
     email: string,
     password: string,
-    createdAt: Date | null,
-    updatedAt: Date | null
+    createdAt?: Date,
+    updatedAt?: Date
 }
 type UserResponse = Omit<User, 'password'> //remove password utk response
 type UserRequest = Omit<User, 'id' | 'createdAt' | 'updatedAt'> // request payload create
