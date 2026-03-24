@@ -1,4 +1,4 @@
-# Submission Backend 1 Rajab - FelienZ
+# Submission Backend 1 By FelienZ
 
 Submission backend Node.js + Express yang dibangun menggunakan TypeScript dan PostgreSQL Untuk demonstrasi Git & Docker.
 
@@ -9,7 +9,7 @@ Sebelum menjalankan proyek ini, pastikan Anda telah memiliki:
 - **Node.js** (v18 atau lebih baru)
 - **npm** (Bawaan dari Node.js)
 - **PostgreSQL Server** (Untuk database lokal, jika tidak menggunakan Docker)
-- **Docker & Docker Compose** (Opsional, sangat disarankan untuk kemudahan deployment)
+- **Docker & Docker Compose**
 
 ## 🚀 Quick Start Project
 
@@ -257,4 +257,8 @@ Berikut adalah screenshot hasil _testing_ operasional API yang dieksekusi melalu
 
 ---
 
-📝 **2026. Created By FelienZ**
+📝 **NOTE** : Penting pakai init.sql jika mengikuti compose saat sekarang juga untuk menjalankan npm run migrate up untuk membuat skema database sebelum run project.
+
+---
+
+**2026. Created By FelienZ**
