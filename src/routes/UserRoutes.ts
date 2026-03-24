@@ -5,8 +5,8 @@ const router = express.Router();
 
 export const UserRoutes = (userHandler: UserHandler) => {
   router.post('/', (req, res) => userHandler.createUser(req, res));
-  router.get('/:userId', (req, res) => userHandler.getUserById(req, res));
-  router.get('/email', (req, res) => userHandler.getUserByEmail(req, res)); // via body
+  router.get('/user/:userId', (req, res) => userHandler.getUserById(req, res));
+  router.get('/email/:email', (req, res) => userHandler.getUserByEmail(req, res));
   router.put('/:userId', (req, res) => userHandler.updateUser(req, res));
   router.delete('/:userId', (req, res) => userHandler.deleteUser(req, res));
   return router;
