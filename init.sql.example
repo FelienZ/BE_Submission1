@@ -1,0 +1,4 @@
+CREATE USER ambatron WITH password 'gaklogis';
+CREATE DATABASE namadb;
+GRANT ALL PRIVILEGES ON DATABASE namadb TO ambatron;
+ALTER DATABASE namadb OWNER to ambatron;
