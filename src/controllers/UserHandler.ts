@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import type { UserService } from '../models/interfaces/services.js';
 import type { UserRequest, UserResponse } from '../models/types/user.js';
 import type { wrappedResponse } from '../models/interfaces/apiResponse.js';
+import { DomainError } from '../services/error/DomainError.js';
 
 export class UserHandler {
   userService: UserService;
@@ -21,7 +22,7 @@ export class UserHandler {
       return res.status(201).json({ data: {id: userId}, message: 'success created user' });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
-      return res.status(500).json({ message: errorMessage });
+      return res.status(error instanceof DomainError ? error.statusCode : 500).json({ message: errorMessage });
     }
   }
   async getUserById(req: Request, res: wrappedResponse<UserResponse>): Promise<Response> {
@@ -34,12 +35,12 @@ export class UserHandler {
       return res.status(200).json({data: user, message: 'success get user by id'});
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
-      return res.status(500).json({ message: errorMessage});
+      return res.status(error instanceof DomainError ? error.statusCode : 500).json({ message: errorMessage});
     }
   }
   async getUserByEmail(req: Request, res: wrappedResponse<UserResponse>): Promise<Response> {
     try {
-      const email = String(req.body.email);
+      const email = String(req.params.email);
       const user = await this.userService.getUserByEmail(email);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
@@ -47,7 +48,7 @@ export class UserHandler {
       return res.status(200).json({data: user, message: 'success get user by email'});
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
-      return res.status(500).json({ message: errorMessage });
+      return res.status(error instanceof DomainError ? error.statusCode : 500).json({ message: errorMessage });
     }
   }
   async updateUser(req: Request, res: wrappedResponse): Promise<Response> {
@@ -58,7 +59,7 @@ export class UserHandler {
       return res.status(200).json({ message: 'User updated successfully' });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
-      return res.status(500).json({ message: errorMessage });
+      return res.status(error instanceof DomainError ? error.statusCode : 500).json({ message: errorMessage });
     }
   }
   async deleteUser(req: Request, res: wrappedResponse): Promise<Response> {
@@ -68,7 +69,7 @@ export class UserHandler {
       return res.status(200).json({ message: 'User deleted successfully' });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
-      return res.status(500).json({ message: errorMessage });
+      return res.status(error instanceof DomainError ? error.statusCode : 500).json({ message: errorMessage });
     }
   }
 

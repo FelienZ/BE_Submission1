@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import type { NoteService } from '../models/interfaces/services.js';
 import type { Note, NoteRequest } from '../models/types/note.js';
 import type { wrappedResponse } from '../models/interfaces/apiResponse.js';
+import { DomainError } from '../services/error/DomainError.js';
 
 export class NoteHandler {
   noteService: NoteService;
@@ -22,7 +23,7 @@ export class NoteHandler {
       return res.status(201).json({ data: {id: noteId}  , message: 'Success created note'});
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Internal Server Error'; // ambil dari return service
-      return res.status(500).json({ message: errorMessage, data: {id: ''}});
+      return res.status(error instanceof DomainError ? error.statusCode : 500).json({ message: errorMessage});
     }
   }
   async getNotes(res: wrappedResponse<Note[]>): Promise<Response> {
@@ -31,7 +32,7 @@ export class NoteHandler {
       return res.status(200).json({data:notes, message: 'success get notes'});
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
-      return res.status(500).json({ message: errorMessage});
+      return res.status(error instanceof DomainError ? error.statusCode : 500).json({ message: errorMessage});
     }
   }
   async getNotesByUserId(req: Request, res: wrappedResponse<Note[]>): Promise<Response> {
@@ -41,7 +42,7 @@ export class NoteHandler {
       return res.status(200).json({data: notes, message: 'success Get user notes'});
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
-      return res.status(500).json({ message: errorMessage });
+      return res.status(error instanceof DomainError ? error.statusCode : 500).json({ message: errorMessage });
     }
   }
   async getNoteById(req: Request, res: wrappedResponse<Note>): Promise<Response> {
@@ -54,7 +55,7 @@ export class NoteHandler {
       return res.status(200).json({data: note, message: 'success get note by id'});
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
-      return res.status(500).json({ message: errorMessage });
+      return res.status(error instanceof DomainError ? error.statusCode : 500).json({ message: errorMessage });
     }
   }
   async updateNote(req: Request, res: wrappedResponse): Promise<Response> {
@@ -65,7 +66,7 @@ export class NoteHandler {
       return res.status(200).json({ message: 'Note updated successfully' });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
-      return res.status(500).json({ message: errorMessage});
+      return res.status(error instanceof DomainError ? error.statusCode : 500).json({ message: errorMessage});
     }
   }
   async deleteNote(req: Request, res: wrappedResponse): Promise<Response> {
@@ -75,7 +76,7 @@ export class NoteHandler {
       return res.status(200).json({ message: 'Note deleted successfully' });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
-      return res.status(500).json({ message: errorMessage });
+      return res.status(error instanceof DomainError ? error.statusCode : 500).json({ message: errorMessage });
     }
   }
 }
