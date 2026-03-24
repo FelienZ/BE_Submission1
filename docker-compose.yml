@@ -18,7 +18,7 @@ services:
     ports:
       - "${APP_PORT}:${APP_PORT}"
     environment:
-      - DB_HOST=db  #auto read dari env file buat config
+      - PGHOST=db  #auto read dari env file buat config
     depends_on:
       - db
 
