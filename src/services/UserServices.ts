@@ -21,7 +21,7 @@ export class UserServices implements UserService {
       ...payload,
       id: randomUUID().toString(),
       createdAt: new Date(),
-      updatedAt: null
+      updatedAt: new Date()
     };
     const userId = await this.userRepo.createUser(newUser).catch(err => {
       throw ErrorDBTranslator(err);
@@ -39,8 +39,8 @@ export class UserServices implements UserService {
       id: user.id,
       name: user.name,
       email:user.email,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
+      createdAt: user.createdAt ?? new Date(), // optional, not Null cegah undefined
+      updatedAt: user.updatedAt ?? new Date()
     };
     return userResponse;
   }
@@ -55,8 +55,8 @@ export class UserServices implements UserService {
       id: user.id,
       name: user.name,
       email:user.email,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
+      createdAt: user.createdAt??new Date(),
+      updatedAt: user.updatedAt?? new Date()
     };
     return userResponse;
 
@@ -66,7 +66,6 @@ export class UserServices implements UserService {
       ...payload,
       id: id,
       updatedAt: new Date(),
-      createdAt: null,
     };
     await this.userRepo.updateUser(newUser).catch(err => {
       throw ErrorDBTranslator(err);
