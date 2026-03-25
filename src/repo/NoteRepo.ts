@@ -1,6 +1,6 @@
 import type { Pool } from 'pg';
 import type { NoteRepository } from '../models/interfaces/repository.js';
-import type { Note } from '../models/types/note.js';
+import type { Note, UpdateNoteRequest } from '../models/types/note.js';
 import NoteMapper from './utils/NoteMapper.js';
 import { NotFoundError } from '../services/error/NotFoundError.js';
 
@@ -43,9 +43,19 @@ export class NoteRepo implements NoteRepository {
     }
     return NoteMapper(result.rows[0]);
   }
-  async updateNote(payload: Note): Promise<void> {
-    const query = 'UPDATE notes SET title = $1, content = $2, updated_at = $3 WHERE id = $4';
-    const values = [payload.title, payload.content, payload.updatedAt, payload.id];
+  async updateNote(noteId: string, payload: UpdateNoteRequest): Promise<void> {
+    let query = 'UPDATE notes SET updated_at = $2';
+    // update note optional body, tapi jangan created_at, owner_id dan id (karena sekarang terima Note lengkap)
+    const values = [noteId, payload.updatedAt];
+    if (payload.title && payload.title.trim() !== ''){
+      query += `, title = $${values.length + 1}`
+      values.push(payload.title)
+    }
+    if (payload.content && payload.content.trim() != ''){
+      query += `, content = $${values.length + 1}`
+      values.push(payload.content)
+    }
+    query += ' WHERE id = $1'
     const result = await this.dbClient.query(query, values);
     if (result.rowCount == 0){
       throw new NotFoundError('Catatan Tidak Ditemukan');

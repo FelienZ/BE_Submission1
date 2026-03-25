@@ -1,6 +1,6 @@
 import type { Pool } from 'pg';
 import type { UserRepository } from '../models/interfaces/repository.js';
-import type { User } from '../models/types/user.js';
+import type { UpdateUserRequest, User } from '../models/types/user.js';
 import UserMapper from './utils/UserMapper.js';
 import { NotFoundError } from '../services/error/NotFoundError.js';
 
@@ -37,9 +37,22 @@ export class UserRepo implements UserRepository {
     }
     return UserMapper(result.rows[0]);
   }
-  async updateUser( payload: User): Promise<void> {
-    const query = 'UPDATE users SET user_name = $1, email = $2, password = $3, updated_at = $4 WHERE id = $5';
-    const values = [payload.name, payload.email, payload.password, payload.updatedAt, payload.id];
+  async updateUser(id: string, payload: UpdateUserRequest): Promise<void> {
+    let query = 'UPDATE users SET updated_at = $1';
+    const values = [payload.updatedAt, id];
+    if(payload.email && payload.email.trim() != ''){
+      query +=  `, email = $${values.length + 1}`
+      values.push(payload.email)
+    }
+    if(payload.name && payload.name.trim() != ''){
+      query +=  `, user_name = $${values.length + 1}`
+      values.push(payload.name)
+    }
+    if(payload.password && payload.password.trim() != ''){
+      query +=  `, password = $${values.length + 1}`
+      values.push(payload.password)
+    }
+    query += ' WHERE id = $2'
     const result = await this.dbClient.query(query, values);
     if (result.rowCount == 0){
       throw new NotFoundError('User Tidak Ditemukan');
