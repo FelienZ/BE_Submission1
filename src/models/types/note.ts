@@ -9,5 +9,6 @@ type Note = {
 //deleted langsung query condition (misal soft delete)
 // type NoteResponse = Omit<Note, 'ownerId'>
 type NoteRequest = Omit<Note, 'id' | 'createdAt' | 'updatedAt'>
+type UpdateNoteRequest = Omit<Note, 'id' | 'ownerId' | 'createdAt'>
 
-export type { Note, NoteRequest };
+export type { Note, NoteRequest, UpdateNoteRequest };
