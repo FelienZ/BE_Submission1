@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { UserService } from '../models/interfaces/services.js';
-import type { User, UserRequest, UserResponse } from '../models/types/user.js';
+import type { UpdateUserRequest, User, UserRequest, UserResponse } from '../models/types/user.js';
 import type { UserRepo } from '../repo/UserRepo.js';
 import { ErrorDBTranslator } from './error/ErrorTranslator.js';
 import { DomainError } from './error/DomainError.js';
@@ -62,12 +62,13 @@ export class UserServices implements UserService {
 
   }
   async updateUser(id: string, payload: UserRequest): Promise<void> {
-    const newUser: User = {
-      ...payload,
-      id: id,
+    const newUser: UpdateUserRequest = {
+      name:payload.name,
+      password: payload.password,
+      email: payload.email,
       updatedAt: new Date(),
     };
-    await this.userRepo.updateUser(newUser).catch(err => {
+    await this.userRepo.updateUser(id, newUser).catch(err => {
       throw ErrorDBTranslator(err);
     });
   }
