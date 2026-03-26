@@ -8,6 +8,6 @@ type User = {
 }
 type UserResponse = Omit<User, 'password'> //remove password utk response
 type UserRequest = Omit<User, 'id' | 'createdAt' | 'updatedAt'> // request payload create
-type UpdateUserRequest = Omit<User, "id" | "createdAt">
+type UpdateUserRequest = Omit<User, 'id' | 'createdAt'>
 
 export type { User, UserResponse, UserRequest, UpdateUserRequest };

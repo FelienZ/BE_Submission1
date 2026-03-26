@@ -48,14 +48,14 @@ export class NoteRepo implements NoteRepository {
     // update note optional body, tapi jangan created_at, owner_id dan id (karena sekarang terima Note lengkap)
     const values = [noteId, payload.updatedAt];
     if (payload.title && payload.title.trim() !== ''){
-      query += `, title = $${values.length + 1}`
-      values.push(payload.title)
+      query += `, title = $${values.length + 1}`;
+      values.push(payload.title);
     }
     if (payload.content && payload.content.trim() != ''){
-      query += `, content = $${values.length + 1}`
-      values.push(payload.content)
+      query += `, content = $${values.length + 1}`;
+      values.push(payload.content);
     }
-    query += ' WHERE id = $1'
+    query += ' WHERE id = $1';
     const result = await this.dbClient.query(query, values);
     if (result.rowCount == 0){
       throw new NotFoundError('Catatan Tidak Ditemukan');

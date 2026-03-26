@@ -41,18 +41,18 @@ export class UserRepo implements UserRepository {
     let query = 'UPDATE users SET updated_at = $1';
     const values = [payload.updatedAt, id];
     if(payload.email && payload.email.trim() != ''){
-      query +=  `, email = $${values.length + 1}`
-      values.push(payload.email)
+      query +=  `, email = $${values.length + 1}`;
+      values.push(payload.email);
     }
     if(payload.name && payload.name.trim() != ''){
-      query +=  `, user_name = $${values.length + 1}`
-      values.push(payload.name)
+      query +=  `, user_name = $${values.length + 1}`;
+      values.push(payload.name);
     }
     if(payload.password && payload.password.trim() != ''){
-      query +=  `, password = $${values.length + 1}`
-      values.push(payload.password)
+      query +=  `, password = $${values.length + 1}`;
+      values.push(payload.password);
     }
-    query += ' WHERE id = $2'
+    query += ' WHERE id = $2';
     const result = await this.dbClient.query(query, values);
     if (result.rowCount == 0){
       throw new NotFoundError('User Tidak Ditemukan');

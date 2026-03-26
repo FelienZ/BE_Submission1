@@ -13,8 +13,8 @@ export function ErrorDBTranslator(err: unknown): Error {
       return new DomainError('Not null violated', 422);
     case '23514':
       return new DomainError('conditional bermasalah', 422);
-      default:
-      return new DomainError(`Database Error: ${err.message}`, 500)
+    default:
+      return new DomainError(`Database Error: ${err.message}`, 500);
     }
   }
   if (err instanceof DomainError) return err;
