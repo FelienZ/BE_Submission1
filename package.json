@@ -5,7 +5,7 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "build": "npx tsc",
     "dev": "nodemon dist/index.js",
     "start": "node dist/index.js",
@@ -13,7 +13,12 @@
     "lint:fix": "eslint . --fix ",
     "migrate": "node-pg-migrate -e .env"
   },
-  "keywords": ["Submission", "Backend", "Rajab", "FelienZ"],
+  "keywords": [
+    "Submission",
+    "Backend",
+    "Rajab",
+    "FelienZ"
+  ],
   "author": "FelienZ",
   "license": "ISC",
   "dependencies": {
@@ -25,10 +30,13 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
     "@types/node": "^25.5.0",
     "@types/pg": "^8.20.0",
     "eslint": "^10.1.0",
+    "jest": "^30.3.0",
     "nodemon": "^3.1.14",
+    "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.57.1"
