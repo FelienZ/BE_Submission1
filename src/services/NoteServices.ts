@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { NoteService } from '../models/interfaces/services.js';
-import type { Note, NoteRequest } from '../models/types/note.js';
+import type { Note, NoteRequest, UpdateNoteRequest } from '../models/types/note.js';
 import type { NoteRepo } from '../repo/NoteRepo.js';
 import { ErrorDBTranslator } from './error/ErrorTranslator.js';
 import { DomainError } from './error/DomainError.js';
@@ -50,12 +50,12 @@ export class NoteServices implements NoteService {
     return note;
   }
   async updateNote(id: string, payload: NoteRequest): Promise<void> {
-    const newNote: Note = {
-      ...payload,
-      id: id,
+    const newNote: UpdateNoteRequest = {
+      title : payload.title,
+      content: payload.content,
       updatedAt: new Date(),
     };
-    await this.noteRepo.updateNote(newNote).catch(err => {
+    await this.noteRepo.updateNote(id, newNote).catch(err => {
       throw ErrorDBTranslator(err);
     });
   }

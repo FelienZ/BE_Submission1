@@ -10,7 +10,7 @@
     "module": "nodenext",
     "target": "es2022",
     "moduleResolution": "nodenext", //sinkronisasi js ts impor
-    "types": [],
+    "types": ["jest", "node"],
     
     // For nodejs:
     // "lib": ["esnext"],

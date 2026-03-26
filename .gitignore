@@ -3,5 +3,3 @@ node_modules
 dist/*
 
 init.sql
-
-package-lock.json

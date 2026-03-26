@@ -30,6 +30,8 @@ app.get('/', (_, res)=> res.json({message: 'yoi'}) );
 app.use('/api/notes', NoteRoutes(noteHandler));
 app.use('/api/users', UserRoutes(userHandler));
 
+app.use((_, res)=> res.status(404).json({message: 'route not found'}));
+
 app.listen(port, host, ()=>{
   console.log(`Server Run at: http://${host}:${port}`);
 });
