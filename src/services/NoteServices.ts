@@ -5,11 +5,14 @@ import type { NoteRepo } from '../repo/NoteRepo.js';
 import { ErrorDBTranslator } from './error/ErrorTranslator.js';
 import { DomainError } from './error/DomainError.js';
 import { NotFoundError } from './error/NotFoundError.js';
+import type { UserRepo } from '../repo/UserRepo.js';
 
 export class NoteServices implements NoteService {
   noteRepo: NoteRepo;
-  constructor(noteRepo: NoteRepo) {
+  userRepo: UserRepo;
+  constructor(noteRepo: NoteRepo, userRepo: UserRepo) {
     this.noteRepo = noteRepo;
+    this.userRepo = userRepo;
 
     this.createNote = this.createNote.bind(this);
     this.getNotes = this.getNotes.bind(this);
@@ -36,6 +39,12 @@ export class NoteServices implements NoteService {
     return notes;
   }
   async getNotesByUserId(userId: string): Promise<Note[]> {
+    const user = await this.userRepo.getUserById(userId).catch(err => {
+      throw ErrorDBTranslator(err);
+    });
+    if (!user){
+      throw new NotFoundError('User Tidak ditemukan');
+    }
     const notes = await this.noteRepo.getNotesByUserId(userId).catch(err => {
       throw ErrorDBTranslator(err);
     });
