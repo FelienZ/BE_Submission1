@@ -9,8 +9,8 @@ interface NoteRepository {
     getNotes: () => Promise<Note[]>;
     getNotesByUserId: (userId: string) => Promise<Note[]>;
     getNoteById: (noteId: string) => Promise<Note | null>;
-    updateNote: (noteId: string, payload: UpdateNoteRequest) => Promise<void>;
-    deleteNote: (noteId: string) => Promise<void>;
+    updateNote: (noteId: string, payload: UpdateNoteRequest) => Promise<boolean>;
+    deleteNote: (noteId: string) => Promise<boolean>;
 }
 
 interface UserRepository {
@@ -18,8 +18,8 @@ interface UserRepository {
     createUser: (payload:   User) => Promise<string>;
     getUserById: (userId: string) => Promise<User | null>;
     getUserByEmail: (email: string) => Promise<User | null>;
-    updateUser: (userId: string, payload: UpdateUserRequest) => Promise<void>;
-    deleteUser: (userId: string) => Promise<void>
+    updateUser: (userId: string, payload: UpdateUserRequest) => Promise<boolean>;
+    deleteUser: (userId: string) => Promise<boolean>
 }
 
 interface LoggerRepository {
