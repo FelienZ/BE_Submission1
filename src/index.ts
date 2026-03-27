@@ -20,7 +20,7 @@ const userService: UserServices = new UserServices(userRepo);
 const userHandler = new UserHandler(userService);
 
 const noteRepo: NoteRepo = new NoteRepo(DBClient);
-const noteService: NoteServices = new NoteServices(noteRepo);
+const noteService: NoteServices = new NoteServices(noteRepo, userRepo);
 const noteHandler = new NoteHandler(noteService);
 
 app.use(express.json());
