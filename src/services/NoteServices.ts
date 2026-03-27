@@ -4,11 +4,15 @@ import type { Note, NoteRequest, UpdateNoteRequest } from '../models/types/note.
 import type { NoteRepo } from '../repo/NoteRepo.js';
 import { ErrorDBTranslator } from './error/ErrorTranslator.js';
 import { DomainError } from './error/DomainError.js';
+import { NotFoundError } from './error/NotFoundError.js';
+import type { UserRepo } from '../repo/UserRepo.js';
 
 export class NoteServices implements NoteService {
   noteRepo: NoteRepo;
-  constructor(noteRepo: NoteRepo) {
+  userRepo: UserRepo;
+  constructor(noteRepo: NoteRepo, userRepo: UserRepo) {
     this.noteRepo = noteRepo;
+    this.userRepo = userRepo;
 
     this.createNote = this.createNote.bind(this);
     this.getNotes = this.getNotes.bind(this);
@@ -35,6 +39,12 @@ export class NoteServices implements NoteService {
     return notes;
   }
   async getNotesByUserId(userId: string): Promise<Note[]> {
+    const user = await this.userRepo.getUserById(userId).catch(err => {
+      throw ErrorDBTranslator(err);
+    });
+    if (!user){
+      throw new NotFoundError('User Tidak ditemukan');
+    }
     const notes = await this.noteRepo.getNotesByUserId(userId).catch(err => {
       throw ErrorDBTranslator(err);
     });
@@ -50,18 +60,27 @@ export class NoteServices implements NoteService {
     return note;
   }
   async updateNote(id: string, payload: NoteRequest): Promise<void> {
+    if (!payload.content && !payload.title){
+      throw new DomainError('Invalid Payload, Try again with new valid args');
+    }
     const newNote: UpdateNoteRequest = {
       title : payload.title,
       content: payload.content,
       updatedAt: new Date(),
     };
-    await this.noteRepo.updateNote(id, newNote).catch(err => {
+    const result = await this.noteRepo.updateNote(id, newNote).catch(err => {
       throw ErrorDBTranslator(err);
     });
+    if (!result){
+      throw new NotFoundError('Catatan Tidak Ditemukan');
+    }
   }
   async deleteNote(noteId: string): Promise<void> {
-    await this.noteRepo.deleteNote(noteId).catch(err => {
+    const result = await this.noteRepo.deleteNote(noteId).catch(err => {
       throw ErrorDBTranslator(err);
     });
+    if (!result){
+      throw new NotFoundError('Catatan Tidak Ditemukan');
+    }
   }   
 }

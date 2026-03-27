@@ -4,6 +4,7 @@ import type { UpdateUserRequest, User, UserRequest, UserResponse } from '../mode
 import type { UserRepo } from '../repo/UserRepo.js';
 import { ErrorDBTranslator } from './error/ErrorTranslator.js';
 import { DomainError } from './error/DomainError.js';
+import { NotFoundError } from './error/NotFoundError.js';
 
 export class UserServices implements UserService {
   userRepo: UserRepo;
@@ -62,17 +63,26 @@ export class UserServices implements UserService {
 
   }
   async updateUser(id: string, payload: UserRequest): Promise<void> {
+    if (!payload.email && !payload.name && !payload.password){
+      throw new DomainError('Invalid Payload, Try again with new valid args');
+    }
     const newUser: UpdateUserRequest = {
       name:payload.name,
       password: payload.password,
       email: payload.email,
       updatedAt: new Date(),
     };
-    await this.userRepo.updateUser(id, newUser).catch(err => {
+    const result = await this.userRepo.updateUser(id, newUser).catch(err => {
       throw ErrorDBTranslator(err);
     });
+    if (!result){
+      throw new NotFoundError('User Tidak ditemukan');
+    }
   }
   async deleteUser(userId: string): Promise<void> {
-    await this.userRepo.deleteUser(userId);
+    const result = await this.userRepo.deleteUser(userId);
+    if (!result){
+      throw new NotFoundError('User Tidak ditemukan');
+    }
   }
 }

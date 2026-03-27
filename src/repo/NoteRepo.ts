@@ -2,7 +2,6 @@ import type { Pool } from 'pg';
 import type { NoteRepository } from '../models/interfaces/repository.js';
 import type { Note, UpdateNoteRequest } from '../models/types/note.js';
 import NoteMapper from './utils/NoteMapper.js';
-import { NotFoundError } from '../services/error/NotFoundError.js';
 
 export class NoteRepo implements NoteRepository {
   dbClient: Pool;
@@ -43,30 +42,35 @@ export class NoteRepo implements NoteRepository {
     }
     return NoteMapper(result.rows[0]);
   }
-  async updateNote(noteId: string, payload: UpdateNoteRequest): Promise<void> {
-    let query = 'UPDATE notes SET updated_at = $2';
-    // update note optional body, tapi jangan created_at, owner_id dan id (karena sekarang terima Note lengkap)
-    const values = [noteId, payload.updatedAt];
-    if (payload.title && payload.title.trim() !== ''){
-      query += `, title = $${values.length + 1}`;
-      values.push(payload.title);
-    }
-    if (payload.content && payload.content.trim() != ''){
-      query += `, content = $${values.length + 1}`;
+  async updateNote(noteId: string, payload: UpdateNoteRequest): Promise<boolean> {
+    const query: string[] = [];
+    const values: (string|Date)[] = [noteId];
+    if (payload.content && payload.content.trim() !== ''){
+      query.push(`content = $${values.length + 1}`);
       values.push(payload.content);
     }
-    query += ' WHERE id = $1';
-    const result = await this.dbClient.query(query, values);
-    if (result.rowCount == 0){
-      throw new NotFoundError('Catatan Tidak Ditemukan');
+    if (payload.title && payload.title.trim() !== ''){
+      query.push(`title = $${values.length + 1}`);
+      values.push(payload.title);
     }
+    if (query.length == 0){
+      return false;// logic polos, no domain
+    }
+    if (payload.updatedAt){
+      query.push(`updated_at = $${values.length + 1}`);
+      values.push(payload.updatedAt);
+    }else{
+      query.push(`updated_at = $${values.length + 1}`);
+      values.push(new Date());
+    }
+    const queryString = `UPDATE notes SET ${query.join(', ')} WHERE id = $1`;
+    const result = await this.dbClient.query(queryString, values);
+    return Number(result.rowCount )> 0;
   }
-  async deleteNote(noteId: string): Promise<void> {
+  async deleteNote(noteId: string): Promise<boolean> {
     const query = 'DELETE FROM notes WHERE id = $1';
     const values = [noteId];
     const result = await this.dbClient.query(query, values);
-    if (result.rowCount == 0){
-      throw new NotFoundError('Catatan Tidak Ditemukan');
-    }
+    return Number(result.rowCount )> 0;
   }
 }
