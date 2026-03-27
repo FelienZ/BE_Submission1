@@ -52,7 +52,7 @@ export class NoteServices implements NoteService {
   }
   async updateNote(id: string, payload: NoteRequest): Promise<void> {
     if (!payload.content && !payload.title){
-      throw new DomainError('Invalid Payload, Try again with new valid args')
+      throw new DomainError('Invalid Payload, Try again with new valid args');
     }
     const newNote: UpdateNoteRequest = {
       title : payload.title,
@@ -63,7 +63,7 @@ export class NoteServices implements NoteService {
       throw ErrorDBTranslator(err);
     });
     if (!result){
-      throw new NotFoundError('Catatan Tidak Ditemukan')
+      throw new NotFoundError('Catatan Tidak Ditemukan');
     }
   }
   async deleteNote(noteId: string): Promise<void> {
@@ -71,7 +71,7 @@ export class NoteServices implements NoteService {
       throw ErrorDBTranslator(err);
     });
     if (!result){
-      throw new NotFoundError('Catatan Tidak Ditemukan')
+      throw new NotFoundError('Catatan Tidak Ditemukan');
     }
   }   
 }

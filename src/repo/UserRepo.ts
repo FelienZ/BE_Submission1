@@ -37,38 +37,38 @@ export class UserRepo implements UserRepository {
     return UserMapper(result.rows[0]);
   }
   async updateUser(id: string, payload: UpdateUserRequest): Promise<boolean> {
-    const query: string[] = []
-    const values: (string | Date)[] = [id]
+    const query: string[] = [];
+    const values: (string | Date)[] = [id];
     if(payload.email && payload.email.trim() !== ''){
-      query.push(`email = $${values.length + 1}`)
-      values.push(payload.email)
+      query.push(`email = $${values.length + 1}`);
+      values.push(payload.email);
     }
     if(payload.name && payload.name.trim() !== ''){
-      query.push(`user_name = $${values.length + 1}`)
-      values.push(payload.name)
+      query.push(`user_name = $${values.length + 1}`);
+      values.push(payload.name);
     }
     if(payload.password && payload.password.trim() !== ''){
-      query.push(`password = $${values.length + 1}`)
-      values.push(payload.password)
+      query.push(`password = $${values.length + 1}`);
+      values.push(payload.password);
     }
     if(query.length == 0){
-      return false
+      return false;
     }
     if(payload.updatedAt){
-      query.push(`updated_at = $${values.length + 1}`)
-      values.push(payload.updatedAt)
+      query.push(`updated_at = $${values.length + 1}`);
+      values.push(payload.updatedAt);
     }else{
-      query.push(`updated_at = $${values.length + 1}`)
-      values.push(new Date())
+      query.push(`updated_at = $${values.length + 1}`);
+      values.push(new Date());
     }
-    const queryString = `UPDATE users SET ${query.join(', ')} WHERE id = $1`
+    const queryString = `UPDATE users SET ${query.join(', ')} WHERE id = $1`;
     const result = await this.dbClient.query(queryString,values);
-    return Number(result.rowCount )> 0
+    return Number(result.rowCount )> 0;
   }
   async deleteUser(userId: string): Promise<boolean> {
     const query = 'DELETE FROM users WHERE id = $1';
     const values = [userId];
     const result = await this.dbClient.query(query, values);
-    return Number(result.rowCount )> 0
+    return Number(result.rowCount )> 0;
   }
 }

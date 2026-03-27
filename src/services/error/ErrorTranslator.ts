@@ -6,7 +6,7 @@ export function ErrorDBTranslator(err: unknown): Error {
   if (err instanceof DatabaseError){
     switch (err.code){
     case '22P02':
-      return new DomainError('Invalid Data Format, for id make sure using uuid correctly', 422)
+      return new DomainError('Invalid Data Format, for id make sure using uuid correctly', 422);
     case '23505':
       return new DomainError('Duplicate data, try again with valid args.', 409);
     case '23503':
@@ -17,7 +17,7 @@ export function ErrorDBTranslator(err: unknown): Error {
       return new DomainError('Invalid Request value does`nt meet requirements', 422);
     default:
       console.error('[DB_ERROR]:', err);
-      return new DomainError(`Internal Server Error`, 500);
+      return new DomainError('Internal Server Error', 500);
     }
   }
   if (err instanceof DomainError) return err;

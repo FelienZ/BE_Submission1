@@ -64,7 +64,7 @@ export class UserServices implements UserService {
   }
   async updateUser(id: string, payload: UserRequest): Promise<void> {
     if (!payload.email && !payload.name && !payload.password){
-      throw new DomainError('Invalid Payload, Try again with new valid args')
+      throw new DomainError('Invalid Payload, Try again with new valid args');
     }
     const newUser: UpdateUserRequest = {
       name:payload.name,
@@ -76,13 +76,13 @@ export class UserServices implements UserService {
       throw ErrorDBTranslator(err);
     });
     if (!result){
-      throw new NotFoundError('User Tidak ditemukan')
+      throw new NotFoundError('User Tidak ditemukan');
     }
   }
   async deleteUser(userId: string): Promise<void> {
     const result = await this.userRepo.deleteUser(userId);
     if (!result){
-      throw new NotFoundError('User Tidak ditemukan')
+      throw new NotFoundError('User Tidak ditemukan');
     }
   }
 }

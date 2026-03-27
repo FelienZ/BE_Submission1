@@ -43,34 +43,34 @@ export class NoteRepo implements NoteRepository {
     return NoteMapper(result.rows[0]);
   }
   async updateNote(noteId: string, payload: UpdateNoteRequest): Promise<boolean> {
-    const query: string[] = []
-    const values: (string|Date)[] = [noteId]
+    const query: string[] = [];
+    const values: (string|Date)[] = [noteId];
     if (payload.content && payload.content.trim() !== ''){
-      query.push(`content = $${values.length + 1}`)
-      values.push(payload.content)
+      query.push(`content = $${values.length + 1}`);
+      values.push(payload.content);
     }
     if (payload.title && payload.title.trim() !== ''){
-      query.push(`title = $${values.length + 1}`)
-      values.push(payload.title)
+      query.push(`title = $${values.length + 1}`);
+      values.push(payload.title);
     }
     if (query.length == 0){
-      return false// logic polos, no domain
+      return false;// logic polos, no domain
     }
     if (payload.updatedAt){
-      query.push(`updated_at = $${values.length + 1}`)
-      values.push(payload.updatedAt)
+      query.push(`updated_at = $${values.length + 1}`);
+      values.push(payload.updatedAt);
     }else{
-      query.push(`updated_at = $${values.length + 1}`)
-      values.push(new Date())
+      query.push(`updated_at = $${values.length + 1}`);
+      values.push(new Date());
     }
-    const queryString = `UPDATE notes SET ${query.join(', ')} WHERE id = $1`
+    const queryString = `UPDATE notes SET ${query.join(', ')} WHERE id = $1`;
     const result = await this.dbClient.query(queryString, values);
-    return Number(result.rowCount )> 0
+    return Number(result.rowCount )> 0;
   }
   async deleteNote(noteId: string): Promise<boolean> {
     const query = 'DELETE FROM notes WHERE id = $1';
     const values = [noteId];
     const result = await this.dbClient.query(query, values);
-    return Number(result.rowCount )> 0
+    return Number(result.rowCount )> 0;
   }
 }
