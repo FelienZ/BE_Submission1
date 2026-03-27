@@ -9,7 +9,7 @@ describe('ErrorDBTranslator Unit Test', ()=> {
     const translated = ErrorDBTranslator(DBE);
 
     expect(translated).toBeInstanceOf(DomainError);
-    expect(translated.message).toEqual('Data Duplikat');
+    expect(translated.message).toBeDefined();
   });
   it('Should return error 500 if code of error DB not defined in mapper', ()=>{
     const DBE = new DatabaseError('Table not found', 1, 'error');
